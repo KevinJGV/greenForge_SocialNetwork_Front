@@ -1,10 +1,22 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+		"Noto Color Emoji";
+	--color-primary: #121212;
+	--color-secondary: #1ed760;
+	--radius-10px: 10px;
+	--backdrop-blur-glass: 3px;
+}
+.glass-primary {
+	background: rgba(18, 18, 18, 0.05);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(var(--backdrop-blur-glass));
+	-webkit-backdrop-filter: blur(var(--backdrop-blur-glass));
 }
 
+.glass-primary:focus-within {
+	background:  rgba(30, 215, 95, 0.05);
+}

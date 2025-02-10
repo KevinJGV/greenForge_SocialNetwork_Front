@@ -39,8 +39,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body style={{
-    backgroundImage: `linear-gradient(#e5e7eb 1px, transparent 0), 
-                      linear-gradient(90deg, #e5e7eb 1px, transparent 0)`,
+    backgroundImage: `linear-gradient(rgba(18, 18, 18, 0.2) 1px, transparent 0), 
+                      linear-gradient(90deg,rgba(18, 18, 18, 0.2) 1px, transparent 0)`,
     backgroundSize: "100px 100px",
   }}>
         {children}
