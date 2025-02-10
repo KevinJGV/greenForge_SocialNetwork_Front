@@ -21,18 +21,28 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  {
+    rel: "icon",
+    href: "/greenforgelogo.svg",
+    size: "32x32",
+    type: "image/svg+xml"
+  }
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
+      <body style={{
+    backgroundImage: `linear-gradient(#e5e7eb 1px, transparent 0), 
+                      linear-gradient(90deg, #e5e7eb 1px, transparent 0)`,
+    backgroundSize: "100px 100px",
+  }}>
         {children}
         <ScrollRestoration />
         <Scripts />
