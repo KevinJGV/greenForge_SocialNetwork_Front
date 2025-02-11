@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router";
 
 type Props = {
     children : React.ReactNode;
@@ -29,7 +28,6 @@ export default function Login({children} : Props) {
 			<article>
 				<div className="backdrop-blur-[2px] flex flex-col gap-1 justify-center text-center p-8 rounded-10px glass-primary transition-colors duration-300">
 					{children}
-					<Link className="mt-6" to="/signin">¿Tienes cuenta? Inicia sesión</Link>
 				</div>
 			</article>
 			<footer>

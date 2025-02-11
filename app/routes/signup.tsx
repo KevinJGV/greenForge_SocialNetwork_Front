@@ -2,10 +2,11 @@ import type { Route } from "./+types/signin";
 import Login from "../components/login";
 import InputComponent from "../components/inputTextForm";
 import Button from "../components/buttonDefault";
+import { Link } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
 	return [
-		{ title: "Inicia Sesión - GreenForge" },
+		{ title: "Sign Up - GreenForge" },
 		{
 			name: "description",
 			content: "Inicia sesión en AlfaSB para acceder a tu cuenta.",
@@ -48,7 +49,7 @@ const passwordSVG: React.ReactNode = (
 	</svg>
 );
 
-export default function signin() {
+export default function signup() {
 	return (
 		<Login>
 			<h1 className="font-bold m-2 text-xl">Iniciar Sesión</h1>
@@ -71,6 +72,12 @@ export default function signin() {
 				></InputComponent>
 				<Button type="submit">Iniciar</Button>
 			</form>
+			<Link
+				className="ease-default underline decoration-solid hover:decoration-double hover:text-secondary-500 visited:text-secondary-700 mt-6"
+				to="/signin"
+			>
+				¿Tienes cuenta? Inicia sesión
+			</Link>
 		</Login>
 	);
 }

@@ -1,12 +1,11 @@
 import React from "react";
-import { Link } from "react-router";
 
 type Props = {
-    children : React.ReactNode;
-}
+	children: React.ReactNode;
+};
 
-export default function Login({children} : Props) {
-    return (
+export default function Login({ children }: Props) {
+	return (
 		<main className="w-screen h-screen flex flex-col items-center justify-around">
 			<div
 				className="flex align-center justify-center gap-1"
@@ -26,11 +25,8 @@ export default function Login({children} : Props) {
 					draggable="false"
 				/>
 			</div>
-			<article>
-				<div className="backdrop-blur-[2px] flex flex-col gap-1 justify-center text-center p-8 rounded-10px glass-primary transition-colors duration-300">
-					{children}
-					<Link className="mt-6" to="/signup">¿Aún sin cuenta? Registrate ahora</Link>
-				</div>
+			<article className="backdrop-blur-[2px] flex flex-col gap-1 justify-center text-center p-8 rounded-10px glass-primary transition-colors duration-300">
+				{children}
 			</article>
 			<footer>
 				© {new Date().getFullYear()} GreenForge - Todos los derechos
