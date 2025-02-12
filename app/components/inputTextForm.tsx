@@ -5,6 +5,7 @@ type Props = {
 	label: string;
     type: string;
 	isRequired?: boolean;
+	pattern?: string;
 	placeholderText: string;
 	svg: React.ReactNode;
 	textHelper?: string;
@@ -20,6 +21,7 @@ export default function InputTextForm({
 	label,
     type,
 	isRequired,
+	pattern,
 	placeholderText,
 	svg,
 	textHelper,
@@ -37,6 +39,7 @@ export default function InputTextForm({
 				name={forProp}
 				id={forProp}
 				required={isRequired}
+				pattern={pattern}
 			/>
 			<label
 				className={`absolute text-gray-500 text-base duration-150 transform -translate-y-3 scale-75 top-5 z-10 origin-[0] left-10 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-secundary ${labelClass}`}

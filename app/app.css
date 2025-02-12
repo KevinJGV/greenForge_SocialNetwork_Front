@@ -21,11 +21,19 @@
 	}
 
 	body {
-		background-color: var(--bg-color);
-		color: var(--color-primary);
+		background-color: var(--color-primary-100);
+		color: var(--color-primary-500);
 		background-image: linear-gradient(var(--grid-lines) 1px, transparent 0),
 			linear-gradient(90deg, var(--grid-lines) 1px, transparent 0);
 		background-size: 100px 100px;
+	}
+
+	#logosPrimary path {
+		@apply !fill-primary-500;
+	}
+
+	#logosSecondary path {
+		@apply !fill-secondary-500;
 	}
 }
 
@@ -33,7 +41,15 @@
 	--font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
 		"Noto Color Emoji";
-	--color-primary: #121212;
+	--color-primary-100: #d0d0d0;
+	--color-primary-200: #a0a0a0;
+	--color-primary-300: #717171;
+	--color-primary-400: #414141;
+	--color-primary-500: #121212;
+	--color-primary-600: #0e0e0e;
+	--color-primary-700: #0b0b0b;
+	--color-primary-800: #070707;
+	--color-primary-900: #040404;
 	--color-secondary-100: #d2f7df;
 	--color-secondary-200: #a5efbf;
 	--color-secondary-300: #78e7a0;
@@ -45,14 +61,13 @@
 	--color-secondary-900: #062b13;
 	--radius-10px: 10px;
 	--backdrop-blur-glass: 3px;
-	--bg-color: white;
 	--grid-lines: rgba(18, 18, 18, 0.2);
 	--glass-primary: rgba(18, 18, 18, 0.05);
 }
 
 .dark {
-	--bg-color: #121212;
-	--color-primary: white;
+	--color-primary-100: #121212;
+	--color-primary-500: #d0d0d0;
 	--grid-lines: rgba(255, 255, 255, 0.2);
 	--glass-primary: rgba(255, 255, 255, 0.05);
 }
