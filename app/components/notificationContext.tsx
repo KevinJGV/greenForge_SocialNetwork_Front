@@ -1,36 +1,116 @@
+import type { AxiosResponse } from "axios";
 import React, { createContext, useContext } from "react";
-import { ToastContainer, toast, Slide, type TypeOptions } from "react-toastify";
+import {
+	ToastContainer,
+	toast,
+	Slide,
+	type TypeOptions
+} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const NotificationContext = createContext({ notify: (message: string, type: TypeOptions) => { } });
 
 type Props = {
 	children: React.ReactNode;
-	types?: TypeOptions;
 };
 
-export function NotificationProvider({ children, types }: Props) {
-    const notify = (message: string, type = types) => {
-        toast(message, {
-            position: "top-center",
-            autoClose: 5000,
-            type: type,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: false,
-            progress: undefined,
-            theme: "colored",
-            transition: Slide,
-        });
-    };
+type ToastPromiseParamsCustom = {
+	pendingMsg: string;
+	successMsg: string;
+	errorMsg: string;
+};
 
-    return (
-        <NotificationContext.Provider value={{ notify }}>
-            {children}
-            <ToastContainer />
-        </NotificationContext.Provider>
-    );
+const NotificationContext = createContext({
+	notify: (message: string, type: TypeOptions = "default") => {},
+});
+
+const PromisedNotificationContext = createContext({
+	notify: (
+		promise: Promise<AxiosResponse>,
+		toastParams: ToastPromiseParamsCustom
+	) => {},
+});
+
+export function NotificationProvider({ children }: Props) {
+	const notify = (message: string, type: TypeOptions = "default") => {
+		toast(message, {
+			type: type,
+			theme: "colored",
+			position: "top-center",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: false,
+			pauseOnHover: true,
+			draggable: false,
+			transition: Slide,
+		});
+	};
+
+	return (
+		<NotificationContext.Provider value={{ notify }}>
+			{children}
+			<ToastContainer
+				position="top-center"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable={false}
+				pauseOnHover
+				theme="colored"
+				transition={Slide}
+			/>
+			;
+		</NotificationContext.Provider>
+	);
+}
+
+export function PromisedNotificationProvider({ children }: Props) {
+	const notify = (
+		promise: Promise<AxiosResponse>,
+		{ pendingMsg, successMsg, errorMsg }: ToastPromiseParamsCustom
+	) => {
+		toast.promise(
+			promise,
+			{
+				pending: pendingMsg,
+				success: successMsg,
+				error: errorMsg,
+			},
+			{
+				theme: "colored",
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: false,
+				pauseOnHover: true,
+				draggable: false,
+				transition: Slide,
+			}
+		);
+	};
+
+	return (
+		<PromisedNotificationContext.Provider value={{ notify }}>
+			{children}
+			<ToastContainer
+				position="top-center"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable={false}
+				pauseOnHover
+				theme="colored"
+				transition={Slide}
+			/>
+			;
+		</PromisedNotificationContext.Provider>
+	);
 }
 
 export const useNotification = () => useContext(NotificationContext);
+export const usePromisedNotification = () =>
+	useContext(PromisedNotificationContext);

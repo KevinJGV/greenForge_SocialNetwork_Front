@@ -1,8 +1,11 @@
 import type { Route } from "./+types/signin";
 import InputComponent from "../components/inputTextForm";
 import Button from "../components/buttonDefault";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import  svgs  from "~/assets/initSessionSVG";
+import { useRef } from "react";
+import { apiForm } from "~/api/axiosConfig";
+import { usePromisedNotification } from "~/components/notificationContext";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -19,10 +22,39 @@ export function meta({}: Route.MetaArgs) {
 
 
 export default function signup() {
+	const { notify } = usePromisedNotification();
+	const navigate = useNavigate();
+	const formRef = useRef<HTMLFormElement>(null);
+	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+
+		if (!formRef.current) return;
+
+		notify(apiForm.post("/signup"), {
+			pendingMsg: "Espere",
+			successMsg: "Registrado",
+			errorMsg: "Usuario ya registrado",
+		});
+
+		const formData = new FormData(formRef.current);
+		try {
+			const res = await apiForm.post("/signup", formData);
+			console.log("res:", res);
+			localStorage.setItem("tkn", res.data.token);
+			navigate("/home");
+		} catch (error) {
+			console.log("error:", error);
+		}
+	}
 	return (
 		<>
 			<h1 className="font-bold m-2 text-xl">Regístrate</h1>
-			<form id="loginForm" className="flex flex-col gap-4 mb-6">
+			<form
+				id="loginForm"
+				ref={formRef}
+				onSubmit={handleSubmit}
+				className="flex flex-col gap-4 mb-6"
+			>
 				<InputComponent
 					forProp="email"
 					type="email"
@@ -55,7 +87,7 @@ export default function signup() {
 					isRequired={true}
 					placeholderText=""
 					svg={svgs.password}
-					inputClass="invalid:border-red-500"
+					inputClass="invalid:invalid:ring-2 invalid:ring-red-500"
 					pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\W]{8,}$"
 					textHelper="Mínimo 8 caracteres, una mayúscula, un número y un símbolo"
 					textHelperClass="text-gray-500"

@@ -1,16 +1,21 @@
-import { Outlet, useLocation } from "react-router";
+import { Navigate, Outlet, useLocation } from "react-router";
 import { AnimatePresence, motion } from "framer-motion";
 
 import Icon from "../components/greenforgeIcon";
 import Logo from "../components/greenforgeLogo";
 
-import { NotificationProvider } from "~/components/notificationContext";
+import { PromisedNotificationProvider } from "~/components/notificationContext";
 
-export default function Login() {
+export default function initSession() {
+	const token = localStorage.getItem("tkn");
+
+	if (token) {
+		return <Navigate to="/home" replace />;
+	}
 	const location = useLocation();
 
 	return (
-		<NotificationProvider>
+		<PromisedNotificationProvider>
 			<main className="w-screen h-screen flex flex-col items-center justify-around">
 				<div
 					className="flex align-center justify-center gap-1"
@@ -39,6 +44,6 @@ export default function Login() {
 					reservados
 				</footer>
 			</main>
-		</NotificationProvider>
+		</PromisedNotificationProvider>
 	);
 }

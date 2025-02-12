@@ -23,7 +23,7 @@ export function meta({}: Route.MetaArgs) {
 	];
 }
 
-export default function signin() {
+export default function home() {
 	const { notify } = usePromisedNotification();
 	const navigate = useNavigate();
 	const formRef = useRef<HTMLFormElement>(null);
@@ -52,37 +52,6 @@ export default function signin() {
 
 	return (
 		<>
-			<h1 className="font-bold m-2 text-xl">Iniciar Sesión</h1>
-			<form
-				id="loginForm"
-				ref={formRef}
-				onSubmit={handleSubmit}
-				className="flex flex-col gap-4 mb-6"
-			>
-				<InputComponent
-					forProp="username"
-					type="text"
-					label="Nombre de usuario"
-					isRequired={true}
-					placeholderText=""
-					svg={svgs.username}
-				></InputComponent>
-				<InputComponent
-					forProp="password"
-					type="password"
-					label="Contraseña"
-					isRequired={true}
-					placeholderText=""
-					svg={svgs.password}
-				></InputComponent>
-				<Button type="submit">Iniciar</Button>
-			</form>
-			<Link
-				className="ease-default underline decoration-solid hover:decoration-double hover:text-secondary-500 visited:text-secondary-700"
-				to="/signup"
-			>
-				¿Aún sin cuenta? Registrate ahora
-			</Link>
 		</>
 	);
 }
