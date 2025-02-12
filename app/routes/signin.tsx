@@ -1,5 +1,4 @@
 import type { Route } from "./+types/signin";
-import Login from "../components/login";
 import InputComponent from "../components/inputTextForm";
 import Button from "../components/buttonDefault";
 import { Link } from "react-router";
@@ -9,9 +8,12 @@ export function meta({}: Route.MetaArgs) {
 		{ title: "Sign In - GreenForge" },
 		{
 			name: "description",
-			content: "Inicia sesión en AlfaSB para acceder a tu cuenta.",
+			content: "Inicia sesión en GreenForge para acceder a tu cuenta.",
 		},
-		{ description: "Inicia sesión en AlfaSB para acceder a tu cuenta." },
+		{
+			description:
+				"Inicia sesión en GreenForge para acceder a tu cuenta.",
+		},
 		{ robots: "noindex, nofollow" },
 	];
 }
@@ -51,9 +53,9 @@ const passwordSVG: React.ReactNode = (
 
 export default function signin() {
 	return (
-		<Login>
+		<>
 			<h1 className="font-bold m-2 text-xl">Iniciar Sesión</h1>
-			<form id="loginForm" action="" className="flex flex-col gap-4">
+			<form id="loginForm" action="" className="flex flex-col gap-4 mb-6">
 				<InputComponent
 					forProp="username"
 					type="text"
@@ -73,11 +75,11 @@ export default function signin() {
 				<Button type="submit">Iniciar</Button>
 			</form>
 			<Link
-				className="ease-default underline decoration-solid hover:decoration-double hover:text-secondary-500 visited:text-secondary-700 mt-6"
+				className="ease-default underline decoration-solid hover:decoration-double hover:text-secondary-500 visited:text-secondary-700"
 				to="/signup"
 			>
 				¿Aún sin cuenta? Registrate ahora
 			</Link>
-		</Login>
+		</>
 	);
 }

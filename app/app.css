@@ -1,12 +1,32 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer utilities {
-  .ease-default {
-	transition-property: all;
-	transition-duration: 0.2s;
-    transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
-  }
+	.ease-default {
+		transition-property: all;
+		transition-duration: 0.2s;
+		transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+	}
+
+	.glass-primary {
+		background: var(--glass-primary);
+		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(var(--backdrop-blur-glass));
+		-webkit-backdrop-filter: blur(var(--backdrop-blur-glass));
+	}
+
+	.glass-primary:focus-within {
+		background: rgba(30, 215, 95, 0.05);
+	}
+
+	body {
+		background-color: var(--bg-color);
+		color: var(--color-primary);
+		background-image: linear-gradient(var(--grid-lines) 1px, transparent 0),
+			linear-gradient(90deg, var(--grid-lines) 1px, transparent 0);
+		background-size: 100px 100px;
+	}
 }
 
 @theme {
@@ -22,17 +42,17 @@
 	--color-secondary-600: #18ac4d;
 	--color-secondary-700: #12813a;
 	--color-secondary-800: #0c5626;
-	--color-secondary-900: #062b13;	
+	--color-secondary-900: #062b13;
 	--radius-10px: 10px;
 	--backdrop-blur-glass: 3px;
-}
-.glass-primary {
-	background: rgba(18, 18, 18, 0.05);
-	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	backdrop-filter: blur(var(--backdrop-blur-glass));
-	-webkit-backdrop-filter: blur(var(--backdrop-blur-glass));
+	--bg-color: white;
+	--grid-lines: rgba(18, 18, 18, 0.2);
+	--glass-primary: rgba(18, 18, 18, 0.05);
 }
 
-.glass-primary:focus-within {
-	background:  rgba(30, 215, 95, 0.05);
+.dark {
+	--bg-color: #121212;
+	--color-primary: white;
+	--grid-lines: rgba(255, 255, 255, 0.2);
+	--glass-primary: rgba(255, 255, 255, 0.05);
 }
