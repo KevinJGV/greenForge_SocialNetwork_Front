@@ -4,7 +4,6 @@ export default function ThemeToggle() {
 	const [darkMode, setDarkMode] = useState(false);
 
 	useEffect(() => {
-		// Detectar si el usuario ya tiene una preferencia
 		const savedTheme = localStorage.getItem("theme");
 		if (savedTheme) {
 			setDarkMode(savedTheme === "dark");
@@ -13,7 +12,6 @@ export default function ThemeToggle() {
 				savedTheme === "dark"
 			);
 		} else {
-			// Detectar si el sistema está en modo oscuro por defecto
 			const prefersDark = window.matchMedia(
 				"(prefers-color-scheme: dark)"
 			).matches;

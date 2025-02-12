@@ -26,8 +26,7 @@ const apiForm = axios.create({
     api.interceptors.response.use(
 		(response) => response,
 		(error) => {
-			if (error.response && error.response.status === 401) {
-				// Si el token ha expirado, redirige al login
+			if (error.response && error.response.status === 401) {				
 				localStorage.removeItem("token");
 				window.location.href = "/signin";
 			}

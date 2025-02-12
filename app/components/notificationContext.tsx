@@ -60,7 +60,6 @@ export function NotificationProvider({ children }: Props) {
 				theme="colored"
 				transition={Slide}
 			/>
-			;
 		</NotificationContext.Provider>
 	);
 }
@@ -106,7 +105,6 @@ export function PromisedNotificationProvider({ children }: Props) {
 				theme="colored"
 				transition={Slide}
 			/>
-			;
 		</PromisedNotificationContext.Provider>
 	);
 }
