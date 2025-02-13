@@ -12,7 +12,7 @@ export default [
 
 	]),
 
-	layout("layouts/homeLayout.tsx", [
-		route("/", "routes/home.tsx")
-	]),
+	// layout("layouts/homeLayout.tsx", [
+	// 	route("/", "routes/home.tsx")
+	// ]),
 ] as RouteConfig;

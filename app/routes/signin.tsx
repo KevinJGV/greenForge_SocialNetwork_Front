@@ -51,7 +51,7 @@ export default function signin() {
 	}
 
 	return (
-		<>
+		<article className="backdrop-blur-[2px] flex flex-col gap-1 justify-center text-center p-8 rounded-10px glass-primary transition-colors duration-300">
 			<h1 className="font-bold m-2 text-xl">Iniciar Sesión</h1>
 			<form
 				id="loginForm"
@@ -64,7 +64,6 @@ export default function signin() {
 					type="text"
 					label="Nombre de usuario"
 					isRequired={true}
-					placeholderText=""
 					svg={svgs.username}
 				></InputComponent>
 				<InputComponent
@@ -72,7 +71,6 @@ export default function signin() {
 					type="password"
 					label="Contraseña"
 					isRequired={true}
-					placeholderText=""
 					svg={svgs.password}
 				></InputComponent>
 				<Button type="submit">Iniciar</Button>
@@ -83,6 +81,6 @@ export default function signin() {
 			>
 				¿Aún sin cuenta? Registrate ahora
 			</Link>
-		</>
+		</article>
 	);
 }
