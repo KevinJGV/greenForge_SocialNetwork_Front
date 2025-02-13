@@ -41,7 +41,7 @@ export default function signin() {
 
 		const formData = new FormData(formRef.current);
 		try {
-			const res = await apiForm.post("/auth/login", formData);
+			const res = await apiForm.post("/auth", formData);
 			console.log("res:", res);
 			localStorage.setItem("tkn", res.data.token);
 			navigate("/home");
