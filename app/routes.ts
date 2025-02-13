@@ -7,7 +7,6 @@ import {
 import { redirect } from "react-router";
 
 export default [
-	redirect("/home"),
 	layout("layouts/initSession.tsx", [
 		route("/signin", "routes/signin.tsx"),
 		route("/signup", "routes/signup.tsx"),
