@@ -8,7 +8,8 @@ import {
 } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-type Props = {sadode;
+type Props = {
+	children: React.ReactNode;
 };
 
 type ToastPromiseParamsCustom = {
