@@ -1,12 +1,11 @@
 import type { Route } from "./+types/signin";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useRef } from "react";
 
 import InputComponent from "../components/inputTextForm";
 import Button from "../components/buttonDefault";
 import svgs from "~/assets/initSessionSVG";
-import {  usePromisedNotification } from "~/components/notificationContext";
-import { apiForm } from "~/api/axiosConfig";
+import { useSignin } from "~/components/useSignin";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -24,28 +23,20 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function signin() {
-	const { notify } = usePromisedNotification();
-	const navigate = useNavigate();
+	const {promise} = useSignin();
 	const formRef = useRef<HTMLFormElement>(null);
+	const buttonRef = useRef<HTMLButtonElement>(null);
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		debugger;
 		e.preventDefault();
+		buttonRef.current?.setAttribute("disabled", "");
 
 		if (!formRef.current) return;
-
-		notify(apiForm.post("/auth/login"), {
-			pendingMsg: "Comprobando credenciales",
-			successMsg: "Autenticado",
-			errorMsg: "Credenciales no válidas",
-		});
-
 		const formData = new FormData(formRef.current);
 		try {
-			const res = await apiForm.post("/auth", formData);
-			console.log("res:", res);
-			localStorage.setItem("tkn", res.data.token);
-			navigate("/home");
+			await promise(formData);
 		} catch (error) {
+			buttonRef.current?.removeAttribute("disabled");
+
 			console.log("error:", error);
 		}
 	}
@@ -73,7 +64,9 @@ export default function signin() {
 					isRequired={true}
 					svg={svgs.password}
 				></InputComponent>
-				<Button type="submit">Iniciar</Button>
+				<Button refObject={buttonRef} type="submit">
+					Iniciar
+				</Button>
 			</form>
 			<Link
 				className="ease-default underline decoration-solid hover:decoration-double hover:text-secondary-500 visited:text-secondary-700"

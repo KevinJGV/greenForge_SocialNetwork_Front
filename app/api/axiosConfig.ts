@@ -1,17 +1,14 @@
 import axios from "axios";
 
 const apiJson = axios.create({
-    baseURL: "https://localhost:9091/api",
+    baseURL: "http://localhost:9091/api",
     headers: {
         "Content-Type": "application/json",
     },
 })
 
 const apiForm = axios.create({
-	baseURL: "https://localhost:9091/api",
-	headers: {
-		"Content-Type": "multipart/form-data",
-	},
+	baseURL: "http://localhost:9091/api"
 });
 
 [apiForm, apiJson].forEach(api => {

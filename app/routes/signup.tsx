@@ -6,6 +6,7 @@ import svgs from "~/assets/initSessionSVG";
 import { useRef } from "react";
 import { apiForm } from "~/api/axiosConfig";
 import { usePromisedNotification } from "~/components/notificationContext";
+import { useSignin } from "~/components/useSignin";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -20,27 +21,33 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function signup() {
+	const {promise} = useSignin();
 	const { notify } = usePromisedNotification();
-	const navigate = useNavigate();
 	const formRef = useRef<HTMLFormElement>(null);
+	const buttonRef = useRef<HTMLButtonElement>(null);
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+		buttonRef.current?.setAttribute("disabled", "");
 
 		if (!formRef.current) return;
-
-		notify(apiForm.post("/signup"), {
-			pendingMsg: "Espere",
-			successMsg: "Registrado",
-			errorMsg: "Usuario ya registrado",
-		});
-
 		const formData = new FormData(formRef.current);
 		try {
-			const res = await apiForm.post("/signup", formData);
-			console.log("res:", res);
-			localStorage.setItem("tkn", res.data.token);
-			navigate("/home");
+			const res = apiForm.post("/signup", formData);
+
+			notify(
+				res,
+				{
+					pendingMsg: "Espere",
+					successMsg: "Registrado",
+					errorMsg: "Usuario ya registrado",
+				},
+				`signup-${Date.now()}`
+			);
+			await res;
+			promise(formData);
+			buttonRef.current?.removeAttribute("disabled");
 		} catch (error) {
+			buttonRef.current?.removeAttribute("disabled");
 			console.log("error:", error);
 		}
 	}
@@ -95,13 +102,13 @@ export default function signup() {
 					label="Contraseña"
 					isRequired={true}
 					svg={svgs.password}
-					inputClass="invalid:invalid:ring-2 invalid:ring-red-500"
+					inputClass="invalid:ring-2 invalid:ring-red-500"
 					pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\W]{8,}$"
 					textHelper="Mínimo 8 caracteres, una mayúscula, un número y un símbolo"
 					textHelperClass="text-gray-500"
 				></InputComponent>
 			</form>
-			<Button form="loginForm" type="submit">
+			<Button refObject={buttonRef} form="loginForm" type="submit">
 				Registrarse
 			</Button>
 			<Link
