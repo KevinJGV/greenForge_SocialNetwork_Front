@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios";
 import React, { createContext, useContext } from "react";
-import { ToastContainer, toast, Slide, type TypeOptions } from "react-toastify";
+import { ToastContainer, toast, Slide, type TypeOptions, type Id } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 type Props = {
@@ -14,21 +14,25 @@ type ToastPromiseParamsCustom = {
 };
 
 const NotificationContext = createContext({
-	notify: (message: string, type: TypeOptions = "default", toastId : String) => {},
+	notify: (
+		message: string,
+		type: TypeOptions = "default",
+		toastId: Id | undefined
+	) => {},
 });
 
 const PromisedNotificationContext = createContext({
 	notify: (
 		promise: Promise<AxiosResponse>,
 		toastParams: ToastPromiseParamsCustom,
-		toastId: String
+		toastId: Id | undefined
 	) => {},
 });
 
 export function NotificationProvider({ children }: Props) {
-	const notify = (message: string, type: TypeOptions = "default") => {
+	const notify = (message: string, type: TypeOptions = "default", toastId: Id | undefined) => {
 		toast(message, {
-			toastId: '1',
+			toastId: toastId,
 			type: type,
 			theme: "colored",
 			position: "top-center",
@@ -64,7 +68,8 @@ export function NotificationProvider({ children }: Props) {
 export function PromisedNotificationProvider({ children }: Props) {
 	const notify = (
 		promise: Promise<AxiosResponse>,
-		{ pendingMsg, successMsg, errorMsg }: ToastPromiseParamsCustom
+		{ pendingMsg, successMsg, errorMsg }: ToastPromiseParamsCustom,
+		toastId: Id | undefined
 	) => {
 		toast.promise(
 			promise.then((res) => {
@@ -92,7 +97,7 @@ export function PromisedNotificationProvider({ children }: Props) {
 				},
 			},
 			{
-				toastId: "1",
+				toastId: toastId,
 				theme: "colored",
 				position: "top-center",
 				autoClose: 5000,

@@ -24,6 +24,7 @@ export function useSignin() {
 		const tkn = awaitedRes.data;
 		if (tkn) {
 			localStorage.setItem("tkn", tkn);
+			debugger;
 			navigate("/home");
 		}
 	}
