@@ -8,25 +8,30 @@ export function useSignin() {
 	const navigate = useNavigate();
 
 	async function promise(formData: FormData) {
-		const res = apiForm.post("/auth", formData);
+		try {
+			const res = apiForm.post("/auth", formData);
 
-		notify(
-			res,
-			{
-				pendingMsg: "Comprobando credenciales",
-				successMsg: "Autenticado",
-				errorMsg: "Credenciales no válidas",
-			},
-			`signin-${Date.now()}`
-		);
-		const awaitedRes = await res;
-		console.log("res:", awaitedRes);
-		const tkn = awaitedRes.data;
-		if (tkn) {
-			localStorage.setItem("tkn", tkn);
-			debugger;
-			navigate("/home");
+			notify(
+				res,
+				{
+					pendingMsg: "Comprobando credenciales",
+					successMsg: "Autenticado",
+					errorMsg: "Credenciales no válidas",
+				},
+				`signin-${Date.now()}`
+			);
+			const awaitedRes = await res;
+			console.log("res:", awaitedRes);
+			const tkn = awaitedRes.data;
+			if (tkn) {
+				localStorage.setItem("tkn", tkn);
+				debugger;
+				navigate("/home");
+			}
+		} catch (error) {
+			console.log(error);
 		}
+		
 	}
 	return { promise };
 }
