@@ -20,7 +20,7 @@ export function meta({}: Route.MetaArgs) {
 	];
 }
 
-export default function signup() {
+export default function Signup() {
 	const {promise} = useSignin();
 	const { notify } = usePromisedNotification();
 	const formRef = useRef<HTMLFormElement>(null);

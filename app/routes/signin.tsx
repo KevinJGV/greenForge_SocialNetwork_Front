@@ -22,7 +22,7 @@ export function meta({}: Route.MetaArgs) {
 	];
 }
 
-export default function signin() {
+export default function Signin() {
 	const {promise} = useSignin();
 	const formRef = useRef<HTMLFormElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);

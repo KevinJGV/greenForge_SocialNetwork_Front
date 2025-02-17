@@ -1,7 +1,9 @@
 import { Navigate, Outlet, useLocation } from "react-router";
-import {AnimatePresence, motion} from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Icon from "../components/greenforgeIcon";
 import ThemeToggle from "~/components/themeToggle";
+import Sidebar from '../components/Sidebar';
+import MainContent from '~/components/mainContent';
 
 export default function homeLayout() {
 	const token = localStorage.getItem("tkn");
@@ -9,11 +11,14 @@ export default function homeLayout() {
 	if (!token) {
 		return <Navigate to="/signin" replace />;
 	}
-	
+
 	const location = useLocation();
 	return (
-        <><ThemeToggle />
-		<main className="w-screen h-screen flex flex-col items-center justify-around">
-		</main></>
+		<main className="flex">
+			<Sidebar />
+			<MainContent>
+				<Outlet />
+			</MainContent>
+		</main>
 	);
 }

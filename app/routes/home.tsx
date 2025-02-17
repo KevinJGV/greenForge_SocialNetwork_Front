@@ -1,57 +1,40 @@
 import type { Route } from "./+types/signin";
-import { Link, useNavigate } from "react-router";
-import { useRef } from "react";
 
-import InputComponent from "../components/inputTextForm";
-import Button from "../components/buttonDefault";
-import svgs from "~/assets/initSessionSVG";
-import {  usePromisedNotification } from "~/components/notificationContext";
-import { apiForm } from "~/api/axiosConfig";
+type Props = {
+	children: React.ReactNode;
+	username?:String; 
+};
 
 export function meta({}: Route.MetaArgs) {
 	return [
-		{ title: "Sign In - GreenForge" },
+		{ title: "GreenForge" },
 		{
 			name: "description",
-			content: "Inicia sesión en GreenForge para acceder a tu cuenta.",
+			content: "Homepage",
 		},
 		{
-			description:
-				"Inicia sesión en GreenForge para acceder a tu cuenta.",
+			description: "Homepage",
 		},
 		{ robots: "noindex, nofollow" },
 	];
 }
 
-export default function home() {
-	const { notify } = usePromisedNotification();
-	const navigate = useNavigate();
-	const formRef = useRef<HTMLFormElement>(null);
-	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		debugger;
-		e.preventDefault();
+export default function Home({ username } : Props) {
+	const getGreeting = () => {
+		const hour = new Date().getHours();
 
-		if (!formRef.current) return;
-
-		notify(apiForm.post("/auth/login"), {
-			pendingMsg: "Comprobando credenciales",
-			successMsg: "Autenticado",
-			errorMsg: "Credenciales no válidas",
-		});
-
-		const formData = new FormData(formRef.current);
-		try {
-			const res = await apiForm.post("/auth/login", formData);
-			console.log("res:", res);
-			localStorage.setItem("tkn", res.data.token);
-			navigate("/home");
-		} catch (error) {
-			console.log("error:", error);
+		if (hour >= 4 && hour < 12) {
+			return `Buenos Días, ${username}`;
+		} else if (hour >= 12 && hour < 18) {
+			return `Buenas Tardes, ${username}`;
+		} else {
+			return `Buenas Noches, ${username}`;
 		}
-	}
+	};
 
 	return (
 		<>
+			<h2 className="text-3xl font-bold mb-6">{getGreeting()}</h2>
 		</>
 	);
 }
