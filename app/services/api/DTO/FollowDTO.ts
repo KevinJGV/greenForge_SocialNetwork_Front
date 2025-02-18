@@ -2,16 +2,16 @@ import ShortUserDTO from "./ShortUserDTO";
 
 export default class FollowDTO {
 	private id: number;
-	private rawUserFollowerId: number;
-	private rawUserFollowedId: number;
+	private rawUserFollowerId: number | undefined;
+	private rawUserFollowedId: number | undefined;
 	private userFollowed: ShortUserDTO; 
 	private userFollower: ShortUserDTO; 
 	private followdate: Date; 
 
 	constructor(
 		id: number,
-		rawUserFollowerId: number,
-		rawUserFollowedId: number,
+		rawUserFollowerId: number | undefined,
+		rawUserFollowedId: number | undefined,
 		userFollowed: ShortUserDTO,
 		userFollower: ShortUserDTO,
 		followdate: Date
@@ -24,7 +24,6 @@ export default class FollowDTO {
 		this.followdate = followdate;
 	}
 
-
     /**
      * Getter $id
      * @return {number}
@@ -33,19 +32,19 @@ export default class FollowDTO {
 		return this.id;
 	}
 
-    /**
-     * Getter $rawUserFollowerId
-     * @return {number}
-     */
-	public get $rawUserFollowerId(): number {
+	/**
+	 * Getter $rawUserFollowerId
+	 * @return {number | undefined}
+	 */
+	public get $rawUserFollowerId(): number | undefined {
 		return this.rawUserFollowerId;
 	}
 
-    /**
-     * Getter $rawUserFollowedId
-     * @return {number}
-     */
-	public get $rawUserFollowedId(): number {
+	/**
+	 * Getter $rawUserFollowedId
+	 * @return {number | undefined}
+	 */
+	public get $rawUserFollowedId(): number | undefined {
 		return this.rawUserFollowedId;
 	}
 
@@ -83,17 +82,17 @@ export default class FollowDTO {
 
     /**
      * Setter $rawUserFollowerId
-     * @param {number} value
+     * @param {number } value
      */
-	public set $rawUserFollowerId(value: number) {
+	public set $rawUserFollowerId(value: number ) {
 		this.rawUserFollowerId = value;
 	}
 
     /**
      * Setter $rawUserFollowedId
-     * @param {number} value
+     * @param {number } value
      */
-	public set $rawUserFollowedId(value: number) {
+	public set $rawUserFollowedId(value: number ) {
 		this.rawUserFollowedId = value;
 	}
 

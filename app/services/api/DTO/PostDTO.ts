@@ -7,7 +7,7 @@ export default class PostDTO {
 	private id: number;
 	private user: ShortUserDTO;
 	private content: string;
-	private imageAttached: string | null;
+	private imageAttached: string | undefined;
 	private uploadDate: Date;
 	private modified: boolean;
 	private hashtags: HashtagDTO[];
@@ -19,7 +19,7 @@ export default class PostDTO {
 		id: number,
 		user: ShortUserDTO,
 		content: string,
-		imageAttached: string | null,
+		imageAttached: string | undefined,
 		uploadDate: Date,
 		modified: boolean,
 		hashtags: HashtagDTO[],
@@ -68,10 +68,7 @@ export default class PostDTO {
      * Getter $imageAttached
      * @return {string }
      */
-	public get $imageAttached(): string  {
-		if (this.imageAttached === null) {
-			return "";
-		}
+	public get $imageAttached(): string | undefined {
 		return this.imageAttached;
 	}
 
@@ -122,85 +119,4 @@ export default class PostDTO {
 	public get $comments(): CommentDTO[] {
 		return this.comments;
 	}
-
-    /**
-     * Setter $id
-     * @param {number} value
-     */
-	public set $id(value: number) {
-		this.id = value;
-	}
-
-    /**
-     * Setter $user
-     * @param {ShortUserDTO} value
-     */
-	public set $user(value: ShortUserDTO) {
-		this.user = value;
-	}
-
-    /**
-     * Setter $content
-     * @param {string} value
-     */
-	public set $content(value: string) {
-		this.content = value;
-	}
-
-    /**
-     * Setter $imageAttached
-     * @param {string } value
-     */
-	public set $imageAttached(value: string ) {
-		this.imageAttached = value;
-	}
-
-    /**
-     * Setter $uploadDate
-     * @param {Date} value
-     */
-	public set $uploadDate(value: Date) {
-		this.uploadDate = value;
-	}
-
-    /**
-     * Setter $modified
-     * @param {boolean} value
-     */
-	public set $modified(value: boolean) {
-		this.modified = value;
-	}
-
-    /**
-     * Setter $hashtags
-     * @param {HashtagDTO[]} value
-     */
-	public set $hashtags(value: HashtagDTO[]) {
-		this.hashtags = value;
-	}
-
-    /**
-     * Setter $rawHashtags
-     * @param {string[]} value
-     */
-	public set $rawHashtags(value: string[]) {
-		this.rawHashtags = value;
-	}
-
-    /**
-     * Setter $likes
-     * @param {LikeDTO[]} value
-     */
-	public set $likes(value: LikeDTO[]) {
-		this.likes = value;
-	}
-
-    /**
-     * Setter $comments
-     * @param {CommentDTO[]} value
-     */
-	public set $comments(value: CommentDTO[]) {
-		this.comments = value;
-	}
-
 }

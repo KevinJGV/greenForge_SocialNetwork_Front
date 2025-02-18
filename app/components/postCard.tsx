@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 import {
 	Heart,
 	MessageCircle,
@@ -8,6 +8,11 @@ import {
 	ChevronUp,
 } from "lucide-react";
 import { useState } from "react";
+import ShortUserDTO from "~/services/api/DTO/ShortUserDTO";
+import { useOutletContext } from "react-router";
+import CommentDTO from "~/services/api/DTO/CommentDTO";
+import TagDTO from "~/services/api/DTO/TagDTO";
+import { setComment } from "~/services/api/PostController";
 
 interface Comment {
 	user: string;
@@ -15,6 +20,7 @@ interface Comment {
 }
 
 interface CardProps {
+	post : Object;
 	username: string;
 	userImage: string;
 	content: string;
@@ -22,15 +28,21 @@ interface CardProps {
 	hashtags: string[];
 	likes: number;
 	comments: Comment[];
+	hasLiked: boolean;
 	onLike: () => void;
 	onUnlike: () => void;
 	onAddComment: (comment: string) => void;
 }
 
+type OutletContextType = {
+	currentUser: ShortUserDTO;
+};
+
 const MAX_CONTENT_LENGTH = 150;
 const MAX_COMMENT_LENGTH = 200;
 
 const PostCard: React.FC<CardProps> = ({
+	post,
 	username,
 	userImage,
 	content,
@@ -38,14 +50,16 @@ const PostCard: React.FC<CardProps> = ({
 	hashtags,
 	likes,
 	comments,
+	hasLiked,
 	onLike,
 	onUnlike,
 	onAddComment,
 }) => {
 	const [isPhotoOnError, setIsPhotoOnError] = useState(false);
 	const [isImageError, setIsImageError] = useState(false);
-	const [isLiked, setIsLiked] = useState(false);
+	const [localLikes, setLocalLikes] = useState(likes);
 	const [showCommentInput, setShowCommentInput] = useState(false);
+	const { currentUser } = useOutletContext<OutletContextType>();
 	const [commentText, setCommentText] = useState("");
 	const [mentionedUsers, setMentionedUsers] = useState<string[]>([]);
 	const [showFullContent, setShowFullContent] = useState(false);
@@ -69,13 +83,16 @@ const PostCard: React.FC<CardProps> = ({
 	};
 
 	const handleLikeClick = () => {
-		if (isLiked) {
+		// PENDIENTE AQIU
+		if (hasLiked) {
+			setLocalLikes(localLikes - 1);
 			onUnlike();
 		} else {
+			setLocalLikes(localLikes + 1);
 			onLike();
 		}
-		setIsLiked(!isLiked);
 	};
+
 
 	const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const newText = e.target.value;
@@ -86,12 +103,31 @@ const PostCard: React.FC<CardProps> = ({
 		}
 	};
 
-	const handleCommentSubmit = () => {
+	const handleCommentSubmit = async () => {
 		if (commentText.trim() && commentText.length <= MAX_COMMENT_LENGTH) {
-			onAddComment(commentText);
-			setCommentText("");
-			setShowCommentInput(false);
-			setMentionedUsers([]);
+			const newComment = new CommentDTO(
+				0,
+				currentUser,
+				mentionedUsers.map(
+					(username, index) =>
+						new TagDTO(
+							index + 1,
+							new ShortUserDTO(0, username, "", "")
+						)
+				),
+				commentText
+			);
+			 try {
+					await setComment(newComment);
+
+					onAddComment(commentText);
+					setCommentText("");
+					setShowCommentInput(false);
+					setMentionedUsers([]);
+				} catch (error) {
+					console.error("Error al enviar el comentario:", error);
+				}
+			
 		}
 	};
 
@@ -175,13 +211,16 @@ const PostCard: React.FC<CardProps> = ({
 					>
 						<Heart
 							className={`w-5 h-5 cursor-pointer ${
-								isLiked
+								hasLiked
 									? "text-green-500 fill-current"
 									: "text-green-500"
 							} mr-1`}
+							aria-label={
+								hasLiked ? "Quitar Me Gusta" : "Dar Me Gusta"
+							}
 						/>
 					</button>
-					<span>{likes + (isLiked ? 0 : 0)}</span>
+					<span>{localLikes}</span>
 				</div>
 				<div className="flex items-center">
 					<button
@@ -267,4 +306,4 @@ const PostCard: React.FC<CardProps> = ({
 	);
 };
 
-export default PostCard;
+export default React.memo(PostCard);

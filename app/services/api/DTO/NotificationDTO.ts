@@ -9,20 +9,20 @@ export default class NotificationDTO {
 	private id: number;
 	private userAction: ShortUserDTO;
 	private userNotified: ShortUserDTO;
-	private like: LikeDTO | null;
-	private follow: FollowDTO | null;
-	private tag: TagDTO | null;
-	private comment: CommentDTO | null;
+	private like: LikeDTO | undefined;
+	private follow: FollowDTO | undefined;
+	private tag: TagDTO | undefined;
+	private comment: CommentDTO | undefined;
 	private createdAt: Date;
 
 	constructor(
 		id: number,
 		userAction: ShortUserDTO,
 		userNotified: ShortUserDTO,
-		like: LikeDTO | null,
-		follow: FollowDTO | null,
-		tag: TagDTO | null,
-		comment: CommentDTO | null,
+		like: LikeDTO | undefined,
+		follow: FollowDTO | undefined,
+		tag: TagDTO | undefined,
+		comment: CommentDTO | undefined,
 		createdAt: Date
 	) {
 		this.id = id;
@@ -60,54 +60,36 @@ export default class NotificationDTO {
 		return this.userNotified;
 	}
 
-    /**
-     * Getter $like
-     * @return {LikeDTO }
-     */
-	public get $like(): LikeDTO  {
-		if (this.like !== null) {
-			return this.like;
-		}
-		throw new Error("LikeDTO is null.");
+	/**
+	 * Getter $like
+	 * @return {LikeDTO | undefined}
+	 */
+	public get $like(): LikeDTO | undefined {
+		return this.like;
 	}
 
-    /**
-     * Getter $follow
-     * @return {FollowDTO }
-     */
-	public get $follow(): FollowDTO  {
-		if (this.follow !== null) {
-			return this.follow;
-		}
-		throw new Error("FollowDTO is null.");
+	/**
+	 * Getter $follow
+	 * @return {FollowDTO | undefined}
+	 */
+	public get $follow(): FollowDTO | undefined {
+		return this.follow;
 	}
 
 	/**
 	 * Getter $tag
-	 * @return {TagDTO }
+	 * @return {TagDTO | undefined}
 	 */
-	/**
-	 * Getter $tag
-	 * @return {TagDTO}
-	 */
-	public get $tag(): TagDTO {
-		if (this.tag !== null) {
-			return this.tag;
-		}
-		throw new Error("TagDTO is null.");
+	public get $tag(): TagDTO | undefined {
+		return this.tag;
 	}
 
 	/**
 	 * Getter $comment
-	 * @return {CommentDTO}
+	 * @return {CommentDTO | undefined}
 	 */
-	public get $comment(): CommentDTO {
-		if (this.comment !== null) {
-			return this.comment;
-			
-		}
-		throw new Error("CommentDTO is null.");
-
+	public get $comment(): CommentDTO | undefined {
+		return this.comment;
 	}
 
     /**

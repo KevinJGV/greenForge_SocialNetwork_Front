@@ -33,3 +33,7 @@ export function toggleLike(data:LikeDTO) {
 export function setComment(data:CommentDTO) {
     return api.post(baseURL, data);
 }
+
+export function checkUserInteractions(data: Object) {
+	return api.get(baseURL, data);
+}

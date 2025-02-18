@@ -1,86 +1,64 @@
+import type PostDTO from "./PostDTO";
 import ShortUserDTO from "./ShortUserDTO";
 
 export default class LikeDTO {
-	private id: number;
-	private rawPostId: number;
-	private rawUserId: number;
-	private user: ShortUserDTO; 
+	private id: number | undefined;
+	private rawPostId: number | undefined;
+	private rawUserId: number | undefined;
+	private user: ShortUserDTO | undefined;
+	private post: PostDTO | undefined;
 
 	constructor(
-		id: number,
-		rawPostId: number,
-		rawUserId: number,
-		user: ShortUserDTO
+		$id: number,
+		$rawPostId: number,
+		$rawUserId: number,
+		$user: ShortUserDTO,
+		$post: PostDTO
 	) {
-		this.id = id;
-		this.rawPostId = rawPostId;
-		this.rawUserId = rawUserId;
-		this.user = user;
+		this.id = $id;
+		this.rawPostId = $rawPostId;
+		this.rawUserId = $rawUserId;
+		this.user = $user;
+		this.post = $post;
 	}
 
-
-    /**
-     * Getter $id
-     * @return {number}
-     */
-	public get $id(): number {
+	/**
+	 * Getter $id
+	 * @return {number | undefined}
+	 */
+	public get $id(): number | undefined {
 		return this.id;
 	}
 
-    /**
-     * Getter $rawPostId
-     * @return {number}
-     */
-	public get $rawPostId(): number {
+	/**
+	 * Getter $rawPostId
+	 * @return {number | undefined}
+	 */
+	public get $rawPostId(): number | undefined {
 		return this.rawPostId;
 	}
 
-    /**
-     * Getter $rawUserId
-     * @return {number}
-     */
-	public get $rawUserId(): number {
+	/**
+	 * Getter $rawUserId
+	 * @return {number | undefined}
+	 */
+	public get $rawUserId(): number | undefined {
 		return this.rawUserId;
 	}
 
-    /**
-     * Getter $user
-     * @return {ShortUserDTO}
-     */
-	public get $user(): ShortUserDTO {
+	/**
+	 * Getter $user
+	 * @return {ShortUserDTO | undefined}
+	 */
+	public get $user(): ShortUserDTO | undefined {
 		return this.user;
 	}
 
-    /**
-     * Setter $id
-     * @param {number} value
-     */
-	public set $id(value: number) {
-		this.id = value;
+	/**
+	 * Getter $post
+	 * @return {PostDTO | undefined}
+	 */
+	public get $post(): PostDTO | undefined {
+		return this.post;
 	}
-
-    /**
-     * Setter $rawPostId
-     * @param {number} value
-     */
-	public set $rawPostId(value: number) {
-		this.rawPostId = value;
-	}
-
-    /**
-     * Setter $rawUserId
-     * @param {number} value
-     */
-	public set $rawUserId(value: number) {
-		this.rawUserId = value;
-	}
-
-    /**
-     * Setter $user
-     * @param {ShortUserDTO} value
-     */
-	public set $user(value: ShortUserDTO) {
-		this.user = value;
-	}
-
 }

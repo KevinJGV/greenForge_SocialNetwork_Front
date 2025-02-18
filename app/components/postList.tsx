@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PostCard from "./postCard";
-import { getPosts } from "~/services/api/PostController";
+import { checkUserInteractions, getPosts, setComment } from "~/services/api/PostController";
 import type ShortUserDTO from "~/services/api/DTO/ShortUserDTO";
 
 interface Post {
@@ -18,6 +18,7 @@ interface Post {
 		content: string;
 		tags: { userTagged: { username: string } }[];
 	}[];
+	hasLiked: boolean;
 }
 
 interface PostListProps {
@@ -27,13 +28,51 @@ interface PostListProps {
 const PostList: React.FC<PostListProps> = ({ currentUser }) => {
 	const [posts, setPosts] = useState<Post[]>([]);
 
-	
 	useEffect(() => {
-		getPosts().then((res: { data: Post[] }) => {
-			setPosts(res.data);
-			console.log(res.data);
-		});
-	}, []);
+		const fetchPosts = async () => {
+			const res = await getPosts();
+			const postsWithInteractions = await Promise.all(
+				res.data.map(async (post) => {
+					const data = {
+						postId: post.id,
+						userId: currentUser.$id,
+					};
+					const interactions = await checkUserInteractions(data);
+					return {
+						...post,
+						hasLiked: interactions.data.liked,
+						hasCommented: interactions.data.commented,
+					};
+				})
+			);
+			setPosts(postsWithInteractions);
+		};
+
+		if (currentUser.$id) {
+			fetchPosts();
+		}
+	}, [currentUser.$id]);
+
+	// useEffect(() => {
+	// 	getPosts().then(async (res: { data: Post[] }) => {
+	// 		const postsWithInteractions = await Promise.all(
+	// 			res.data.map(async (post) => {
+	// 				const data = {
+	// 					postId : post.id,
+	// 					userId : currentUser.$id
+	// 				};
+	// 				const interactions = await checkUserInteractions(data);
+	// 				return {
+	// 					...post,
+	// 					hasLiked: interactions.data.liked,
+	// 					hasCommented: interactions.data.commented,
+	// 				};
+	// 			})
+	// 		);
+	// 		setPosts(postsWithInteractions);
+	// 	});
+	// }, [currentUser.$id]);
+
 
 	
 	const handleLike = (postId: string) => {
@@ -58,7 +97,7 @@ const handleUnlike = (postId: string) => {
 };
 
 
-const handleAddComment = (postId: string, comment: string) => {
+const handleAddComment = async (postId: string, comment: string) => {
     setPosts((prevPosts: Post[]) =>
         prevPosts.map((post) =>
             post.id === postId
@@ -84,6 +123,7 @@ const handleAddComment = (postId: string, comment: string) => {
 		<section className="flex flex-wrap space-y-4 place-items-center">
 			{posts.map((post) => (
 				<PostCard
+					post={post}
 					key={post.id}
 					username={post.user.username}
 					userImage={post.user.profilephotouri}
@@ -92,7 +132,6 @@ const handleAddComment = (postId: string, comment: string) => {
 					hashtags={post.hashtags.map((tag) => tag.name)}
 					likes={post.likes.length}
 					comments={post.comments.map((comment) => {
-						
 						const tagsText = comment.tags
 							.map((tag) => `@${tag.userTagged.username}`)
 							.join(" ");
@@ -103,6 +142,7 @@ const handleAddComment = (postId: string, comment: string) => {
 								: comment.content,
 						};
 					})}
+					hasLiked={post.hasLiked}
 					onLike={() => handleLike(post.id)}
 					onUnlike={() => handleUnlike(post.id)}
 					onAddComment={(comment: string) =>
