@@ -1,4 +1,4 @@
-import api from "./axiosConfig";
+import {api} from "./axiosConfig";
 import type CommentDTO from "./DTO/CommentDTO";
 import type LikeDTO from "./DTO/LikeDTO";
 import type PostDTO from "./DTO/PostDTO";

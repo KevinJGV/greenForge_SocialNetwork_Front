@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { usePromisedNotification } from "~/components/notificationContext";
-import api from "~/services/api/axiosConfig";
+import {apiForm} from "~/services/api/axiosConfig";
 
 export default function useSignin() {
 	const { notify } = usePromisedNotification();
@@ -8,7 +8,7 @@ export default function useSignin() {
 
 	async function promise(formData: FormData) {
 		try {
-			const res = api.post("/auth", formData);
+			const res = apiForm.post("/auth", formData);
 
 			notify(
 				res,
@@ -24,7 +24,6 @@ export default function useSignin() {
 			const tkn = awaitedRes.data;
 			if (tkn) {
 				localStorage.setItem("tkn", tkn);
-				debugger;
 				navigate("/home");
 			}
 		} catch (error) {

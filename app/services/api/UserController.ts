@@ -1,4 +1,4 @@
-import api from "./axiosConfig"
+import {api} from "./axiosConfig"
 import type FollowDTO from "./DTO/FollowDTO";
 import type ShortUserDTO from "./DTO/ShortUserDTO";
 

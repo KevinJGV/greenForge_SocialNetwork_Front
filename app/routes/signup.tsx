@@ -4,7 +4,7 @@ import Button from "../components/buttonDefault";
 import { Link, useNavigate } from "react-router";
 import svgs from "~/assets/initSessionSVG";
 import { useRef } from "react";
-import api from "~/services/api/axiosConfig";
+import {apiForm} from "~/services/api/axiosConfig";
 import { usePromisedNotification } from "~/components/notificationContext";
 import useSignin from "~/services/useSignin";
 
@@ -32,7 +32,7 @@ export default function Signup() {
 		if (!formRef.current) return;
 		const formData = new FormData(formRef.current);
 		try {
-			const res = api.post("/signup", formData);
+			const res = apiForm.post("/signup", formData);
 
 			notify(
 				res,

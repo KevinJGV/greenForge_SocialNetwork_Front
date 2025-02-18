@@ -1,5 +1,7 @@
 import type { Route } from "./+types/signin";
 import PostList from '../components/postList';
+import { useOutletContext } from "react-router";
+import type ShortUserDTO from "~/services/api/DTO/ShortUserDTO";
 
 type Props = {
 	children: React.ReactNode;
@@ -20,14 +22,19 @@ export function meta({}: Route.MetaArgs) {
 	];
 }
 
-export default function Home({ username } : Props) {
+type OutletContextType = {
+	currentUser: ShortUserDTO | null;
+};
+
+export default function Home({ username } : Props) {	
+	const { currentUser } = useOutletContext<OutletContextType>();
 	const getGreeting = () => {
 		const hour = new Date().getHours();
 
 		if (hour >= 4 && hour < 12) {
-			return `Buenos Días, ${username}`;
+			return `Buenos Días, ${currentUser?.$username}`;
 		} else if (hour >= 12 && hour < 18) {
-			return `Buenas Tardes, ${username}`;
+			return `Buenas Tardes, ${currentUser?.$username}`;
 		} else {
 			return `Buenas Noches, ${username}`;
 		}
@@ -37,7 +44,7 @@ export default function Home({ username } : Props) {
 	return (
 		<>
 			<h2 className="text-3xl font-bold mb-6">{getGreeting()}</h2>	
-			<PostList />
+			<PostList currentUser={currentUser} />
 		</>
 	);
 }

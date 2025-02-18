@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PostCard from "./postCard";
 import { getPosts } from "~/services/api/PostController";
-import fetchCurrentUser from "~/services/api/CurrenUser";
 import type ShortUserDTO from "~/services/api/DTO/ShortUserDTO";
 
 interface Post {
@@ -21,20 +20,12 @@ interface Post {
 	}[];
 }
 
-const PostList: React.FC = () => {
-    const [currentUser, setCurrentUser] = useState<ShortUserDTO | null>(null);
+interface PostListProps {
+	currentUser: ShortUserDTO;
+}
+
+const PostList: React.FC<PostListProps> = ({ currentUser }) => {
 	const [posts, setPosts] = useState<Post[]>([]);
-
-    useEffect(() => {
-        
-        const getUserData = async () => {
-            const user = await fetchCurrentUser();
-            setCurrentUser(user);
-			console.log(user);
-        };
-
-        getUserData();
-    }, []);
 
 	
 	useEffect(() => {

@@ -1,10 +1,17 @@
-import type React from "react"
-import { Heart, MessageCircle, Send, User } from "lucide-react"
+import type React from "react";
+import {
+	Heart,
+	MessageCircle,
+	Send,
+	User,
+	ChevronDown,
+	ChevronUp,
+} from "lucide-react";
 import { useState } from "react";
 
 interface Comment {
-  user: string
-  text: string
+	user: string;
+	text: string;
 }
 
 interface CardProps {
@@ -15,10 +22,13 @@ interface CardProps {
 	hashtags: string[];
 	likes: number;
 	comments: Comment[];
-  onLike: () => void;
-  onUnlike: () => void;
-  onAddComment: (comment: string) => void;
+	onLike: () => void;
+	onUnlike: () => void;
+	onAddComment: (comment: string) => void;
 }
+
+const MAX_CONTENT_LENGTH = 150;
+const MAX_COMMENT_LENGTH = 200;
 
 const PostCard: React.FC<CardProps> = ({
 	username,
@@ -32,12 +42,16 @@ const PostCard: React.FC<CardProps> = ({
 	onUnlike,
 	onAddComment,
 }) => {
-  const [isPhotoOnError, setIsPhotoOnError] = useState(false);
-  const [isImageError, setIsImageError] = useState(false);
+	const [isPhotoOnError, setIsPhotoOnError] = useState(false);
+	const [isImageError, setIsImageError] = useState(false);
 	const [isLiked, setIsLiked] = useState(false);
 	const [showCommentInput, setShowCommentInput] = useState(false);
 	const [commentText, setCommentText] = useState("");
 	const [mentionedUsers, setMentionedUsers] = useState<string[]>([]);
+	const [showFullContent, setShowFullContent] = useState(false);
+	const [expandedComments, setExpandedComments] = useState<
+		Record<number, boolean>
+	>({});
 
 	const formatComment = (text: string) => {
 		return text.replace(
@@ -46,13 +60,13 @@ const PostCard: React.FC<CardProps> = ({
 		);
 	};
 
-  const handlePhotoOnError = () => {
+	const handlePhotoOnError = () => {
 		setIsPhotoOnError(true);
-  };
+	};
 
-  const handleImageError = () => {
+	const handleImageError = () => {
 		setIsImageError(true);
-  };
+	};
 
 	const handleLikeClick = () => {
 		if (isLiked) {
@@ -63,9 +77,9 @@ const PostCard: React.FC<CardProps> = ({
 		setIsLiked(!isLiked);
 	};
 
-	const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const newText = e.target.value;
-		if (newText.length <= 200) {
+		if (newText.length <= MAX_COMMENT_LENGTH) {
 			setCommentText(newText);
 			const matches = newText.match(/@(\w+)/g) || [];
 			setMentionedUsers(matches.map((match) => match.slice(1)));
@@ -73,13 +87,25 @@ const PostCard: React.FC<CardProps> = ({
 	};
 
 	const handleCommentSubmit = () => {
-		if (commentText.trim() && commentText.length <= 200) {
+		if (commentText.trim() && commentText.length <= MAX_COMMENT_LENGTH) {
 			onAddComment(commentText);
 			setCommentText("");
 			setShowCommentInput(false);
 			setMentionedUsers([]);
 		}
 	};
+
+	const toggleCommentCollapse = (index: number) => {
+		setExpandedComments((prev) => ({
+			...prev,
+			[index]: !prev[index],
+		}));
+	};
+
+	const truncatedContent =
+		content.length > MAX_CONTENT_LENGTH
+			? `${content.slice(0, MAX_CONTENT_LENGTH)}...`
+			: content;
 
 	return (
 		<div className="bg-gray-900 text-white rounded-lg p-4 max-w-md mx-auto">
@@ -88,7 +114,7 @@ const PostCard: React.FC<CardProps> = ({
 					<User className="w-10 h-10 text-gray-400 mr-2" />
 				) : (
 					<img
-						src={userImage}
+						src={userImage || "/placeholder.svg"}
 						alt={username}
 						className="w-10 h-10 rounded-full mr-2"
 						onError={handlePhotoOnError}
@@ -97,15 +123,38 @@ const PostCard: React.FC<CardProps> = ({
 				<span className="font-semibold">{username}</span>
 			</div>
 
-			<p className="mb-4">{content}</p>
+			<div className="mb-4">
+				<p className="break-words">
+					{showFullContent ? content : truncatedContent}
+				</p>
+				{content.length > MAX_CONTENT_LENGTH && (
+					<button
+						onClick={() => setShowFullContent(!showFullContent)}
+						className="text-green-500 hover:underline focus:outline-none mt-2 flex items-center"
+					>
+						{showFullContent ? (
+							<>
+								Ver menos <ChevronUp className="w-4 h-4 ml-1" />
+							</>
+						) : (
+							<>
+								Ver más <ChevronDown className="w-4 h-4 ml-1" />
+							</>
+						)}
+					</button>
+				)}
+			</div>
 
-			{isPhotoOnError ? "" : (
-        <img
+			{isImageError ? (
+				""
+			) : (
+				<img
 					src={image || "/placeholder.svg"}
 					alt="Post image"
 					className="w-full h-48 object-cover rounded-md mb-4"
+					onError={handleImageError}
 				/>
-      )}
+			)}
 
 			<div className="flex flex-wrap mb-4">
 				{hashtags.map((tag, index) => (
@@ -113,7 +162,7 @@ const PostCard: React.FC<CardProps> = ({
 						key={index}
 						className="cursor-pointer text-green-500 mr-2"
 					>
-						{tag}
+						#{tag}
 					</span>
 				))}
 			</div>
@@ -147,57 +196,75 @@ const PostCard: React.FC<CardProps> = ({
 
 			{showCommentInput && (
 				<div className="mb-4">
-					<div className="flex items-center">
-						<input
-							type="text"
+					<div className="flex items-start">
+						<textarea
 							value={commentText}
 							onChange={handleCommentChange}
 							placeholder="Añade un comentario..."
-							className="flex-grow bg-gray-800 text-white rounded-l-md py-2 px-3 focus:outline-none"
-							maxLength={200}
+							className="flex-grow bg-gray-800 text-white rounded-l-md py-2 px-3 focus:outline-none resize-none h-20"
+							maxLength={MAX_COMMENT_LENGTH}
 						/>
 						<button
 							onClick={handleCommentSubmit}
-							disabled={
-								commentText.length === 0 ||
-								commentText.length > 200
-							}
-							className="bg-green-500 cursor-pointer text-white rounded-r-md py-2 px-3 focus:outline-none disabled:opacity-50 disabled:cursor-auto"
+							disabled={commentText.length === 0}
+							className="bg-green-500 text-white rounded-r-md py-2 px-3 h-20 focus:outline-none disabled:opacity-50"
 						>
 							<Send className="w-5 h-5" />
 						</button>
 					</div>
 					<div className="text-sm text-gray-400 mt-1">
-						{commentText.length}/200 carácteres
+						{commentText.length}/{MAX_COMMENT_LENGTH} caracteres
 					</div>
 					{mentionedUsers.length > 0 && (
 						<div className="text-sm text-green-500 mt-1">
-							Mentioned: {mentionedUsers.join(", ")}
+							Etiquetar: {mentionedUsers.join(", ")}
 						</div>
 					)}
 				</div>
 			)}
 
 			<div className="border-t border-gray-700 pt-4">
-				{comments.map((comment, index) => (
-					<div key={index} className="flex items-start mb-3">
-						<User className="w-6 h-6 text-gray-400 mr-2" />
-						<div>
-							<span className="font-semibold mr-2">
-								{comment.user}
-							</span>
-							<span
-								dangerouslySetInnerHTML={{
-									__html: formatComment(comment.text),
-								}}
-							/>
+				{comments.map((comment, index) => {
+					const isExpanded = expandedComments[index] || false;
+					const truncatedComment =
+						comment.text.length > MAX_CONTENT_LENGTH
+							? `${comment.text.slice(0, MAX_CONTENT_LENGTH)}...`
+							: comment.text;
+
+					return (
+						<div key={index} className="mb-3">
+							<div>
+								<span className="font-semibold mr-2">
+									<User className="w-6 h-6 text-gray-400 mr-2 inline" />
+
+									{comment.user}
+								</span>
+								<span
+									dangerouslySetInnerHTML={{
+										__html: formatComment(
+											isExpanded
+												? comment.text
+												: truncatedComment
+										),
+									}}
+								/>
+								{comment.text.length > MAX_CONTENT_LENGTH && (
+									<button
+										onClick={() =>
+											toggleCommentCollapse(index)
+										}
+										className="text-green-500 hover:underline focus:outline-none"
+									>
+										{isExpanded ? "Ver menos" : "Ver más"}
+									</button>
+								)}
+							</div>
 						</div>
-					</div>
-				))}
+					);
+				})}
 			</div>
 		</div>
 	);
-}
+};
 
-export default PostCard
-
+export default PostCard;
