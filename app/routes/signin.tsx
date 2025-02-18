@@ -5,7 +5,7 @@ import { useRef } from "react";
 import InputComponent from "../components/inputTextForm";
 import Button from "../components/buttonDefault";
 import svgs from "~/assets/initSessionSVG";
-import { useSignin } from "~/components/useSignin";
+import useSignin from "~/services/useSignin";
 
 export function meta({}: Route.MetaArgs) {
 	return [

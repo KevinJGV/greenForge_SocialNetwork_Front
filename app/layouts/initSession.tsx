@@ -1,8 +1,8 @@
 import { Navigate, Outlet, useLocation } from "react-router";
 import { AnimatePresence, motion } from "framer-motion";
 
-import Icon from "../components/greenforgeIcon";
-import Logo from "../components/greenforgeLogo";
+import Icon from "../assets/greenforgeIcon";
+import Logo from "../assets/greenforgeLogo";
 
 import { PromisedNotificationProvider } from "~/components/notificationContext";
 

@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 export default function ThemeToggle() {
 	const [darkMode, setDarkMode] = useState(false);
 
-	// Cargar el tema al cargar la página
-	useEffect(() => {
+		useEffect(() => {
 		const savedTheme = localStorage.getItem("theme");
 		if (savedTheme) {
 			setDarkMode(savedTheme === "dark");
@@ -21,8 +20,7 @@ export default function ThemeToggle() {
 		}
 	}, []);
 
-	// Función para alternar el tema
-	const toggleTheme = () => {
+		const toggleTheme = () => {
 		const newTheme = !darkMode ? "dark" : "light";
 		setDarkMode(!darkMode);
 		document.documentElement.classList.toggle("dark", !darkMode);

@@ -4,9 +4,9 @@ import Button from "../components/buttonDefault";
 import { Link, useNavigate } from "react-router";
 import svgs from "~/assets/initSessionSVG";
 import { useRef } from "react";
-import { apiForm } from "~/api/axiosConfig";
+import api from "~/services/api/axiosConfig";
 import { usePromisedNotification } from "~/components/notificationContext";
-import { useSignin } from "~/components/useSignin";
+import useSignin from "~/services/useSignin";
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -32,7 +32,7 @@ export default function Signup() {
 		if (!formRef.current) return;
 		const formData = new FormData(formRef.current);
 		try {
-			const res = apiForm.post("/signup", formData);
+			const res = api.post("/signup", formData);
 
 			notify(
 				res,

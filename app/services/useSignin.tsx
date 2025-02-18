@@ -1,15 +1,14 @@
-// hooks/useSignin.ts
 import { useNavigate } from "react-router";
 import { usePromisedNotification } from "~/components/notificationContext";
-import {apiForm} from "~/api/axiosConfig";
+import api from "~/services/api/axiosConfig";
 
-export function useSignin() {
+export default function useSignin() {
 	const { notify } = usePromisedNotification();
 	const navigate = useNavigate();
 
 	async function promise(formData: FormData) {
 		try {
-			const res = apiForm.post("/auth", formData);
+			const res = api.post("/auth", formData);
 
 			notify(
 				res,

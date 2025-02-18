@@ -1,4 +1,6 @@
 import type { Route } from "./+types/signin";
+import getUserFromToken from "~/services/api/TokenService";
+
 
 export function meta({}: Route.MetaArgs) {
 	return [
@@ -19,6 +21,7 @@ type Props = {
 };
 
 export default function Profile({  }: Props) {
+	const currentUser = getUserFromToken();
 
 	return (
 		<>

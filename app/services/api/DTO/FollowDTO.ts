@@ -1,0 +1,124 @@
+import ShortUserDTO from "./ShortUserDTO";
+
+export default class FollowDTO {
+	private id: number;
+	private rawUserFollowerId: number;
+	private rawUserFollowedId: number;
+	private userFollowed: ShortUserDTO; 
+	private userFollower: ShortUserDTO; 
+	private followdate: Date; 
+
+	constructor(
+		id: number,
+		rawUserFollowerId: number,
+		rawUserFollowedId: number,
+		userFollowed: ShortUserDTO,
+		userFollower: ShortUserDTO,
+		followdate: Date
+	) {
+		this.id = id;
+		this.rawUserFollowerId = rawUserFollowerId;
+		this.rawUserFollowedId = rawUserFollowedId;
+		this.userFollowed = userFollowed;
+		this.userFollower = userFollower;
+		this.followdate = followdate;
+	}
+
+
+    /**
+     * Getter $id
+     * @return {number}
+     */
+	public get $id(): number {
+		return this.id;
+	}
+
+    /**
+     * Getter $rawUserFollowerId
+     * @return {number}
+     */
+	public get $rawUserFollowerId(): number {
+		return this.rawUserFollowerId;
+	}
+
+    /**
+     * Getter $rawUserFollowedId
+     * @return {number}
+     */
+	public get $rawUserFollowedId(): number {
+		return this.rawUserFollowedId;
+	}
+
+    /**
+     * Getter $userFollowed
+     * @return {ShortUserDTO}
+     */
+	public get $userFollowed(): ShortUserDTO {
+		return this.userFollowed;
+	}
+
+    /**
+     * Getter $userFollower
+     * @return {ShortUserDTO}
+     */
+	public get $userFollower(): ShortUserDTO {
+		return this.userFollower;
+	}
+
+    /**
+     * Getter $followdate
+     * @return {Date}
+     */
+	public get $followdate(): Date {
+		return this.followdate;
+	}
+
+    /**
+     * Setter $id
+     * @param {number} value
+     */
+	public set $id(value: number) {
+		this.id = value;
+	}
+
+    /**
+     * Setter $rawUserFollowerId
+     * @param {number} value
+     */
+	public set $rawUserFollowerId(value: number) {
+		this.rawUserFollowerId = value;
+	}
+
+    /**
+     * Setter $rawUserFollowedId
+     * @param {number} value
+     */
+	public set $rawUserFollowedId(value: number) {
+		this.rawUserFollowedId = value;
+	}
+
+    /**
+     * Setter $userFollowed
+     * @param {ShortUserDTO} value
+     */
+	public set $userFollowed(value: ShortUserDTO) {
+		this.userFollowed = value;
+	}
+
+    /**
+     * Setter $userFollower
+     * @param {ShortUserDTO} value
+     */
+	public set $userFollower(value: ShortUserDTO) {
+		this.userFollower = value;
+	}
+
+    /**
+     * Setter $followdate
+     * @param {Date} value
+     */
+	public set $followdate(value: Date) {
+		this.followdate = value;
+	}
+
+}

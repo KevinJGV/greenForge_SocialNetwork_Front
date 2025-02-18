@@ -1,4 +1,5 @@
 import type { Route } from "./+types/signin";
+import PostList from '../components/postList';
 
 type Props = {
 	children: React.ReactNode;
@@ -32,9 +33,11 @@ export default function Home({ username } : Props) {
 		}
 	};
 
+
 	return (
 		<>
-			<h2 className="text-3xl font-bold mb-6">{getGreeting()}</h2>
+			<h2 className="text-3xl font-bold mb-6">{getGreeting()}</h2>	
+			<PostList />
 		</>
 	);
 }

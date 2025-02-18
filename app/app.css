@@ -3,6 +3,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer utilities {
+	*::selection {
+    background-color: var(--color-selection-bg) !important;
+    color: var(--color-selection-text) !important;
+	}
 	.ease-default {
 		transition-property: all;
 		transition-duration: 0.2s;
@@ -60,6 +64,9 @@
 	--color-secondary-800: #0c5626;
 	--color-secondary-900: #062b13;
 
+	--color-selection-bg: hsl(169,78%,7%,1);
+	--color-selection-text: hsl(173,80%,36%,1);
+
 	--color-primarystatic-100: #d0d0d0;
 	--color-primarystatic-200: #a0a0a0;
 	--color-primarystatic-300: #717171;
@@ -78,6 +85,7 @@
 	--color-secondarystatic-700: #12813a;
 	--color-secondarystatic-800: #0c5626;
 	--color-secondarystatic-900: #062b13;
+	
 
 	--radius-10px: 10px;
 	--backdrop-blur-glass: 3px;
@@ -95,6 +103,9 @@
 	--color-primary-700: #717171;
 	--color-primary-800: #a0a0a0;
 	--color-primary-900: #d0d0d0;
+
+	--color-selection-bg: hsl(169,70%,96%,1);
+	--color-selection-text: hsl(173,80%,36%,1);
 
 	--color-secondary-100: #062b13;
 	--color-secondary-200: #0c5626;
