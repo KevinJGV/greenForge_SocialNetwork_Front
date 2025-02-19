@@ -18,7 +18,6 @@ const fetchCurrentUser = async () => {
 	try {
 		const res = await getUser(decodedToken.sub); 
 		const currentUser = res.data;
-
 		
 		return new ShortUserDTO(
 			currentUser.id,

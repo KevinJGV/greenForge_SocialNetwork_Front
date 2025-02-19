@@ -1,8 +1,8 @@
 import ShortUserDTO from "./ShortUserDTO";
 
 export default class TagDTO {
-	private id: number;
-	private userTagged: ShortUserDTO;
+	public id: number;
+	public userTagged: ShortUserDTO;
 
 	constructor(id: number, userTagged: ShortUserDTO) {
 		this.id = id;

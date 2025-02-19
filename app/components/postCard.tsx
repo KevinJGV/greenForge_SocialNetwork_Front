@@ -1,18 +1,17 @@
-import React from "react";
-import {
-	Heart,
-	MessageCircle,
-	Send,
-	User,
-	ChevronDown,
-	ChevronUp,
-} from "lucide-react";
-import { useState } from "react";
-import ShortUserDTO from "~/services/api/DTO/ShortUserDTO";
+import React, { useState } from "react";
+import { User, ChevronDown, ChevronUp, Edit2, X, Check, Heart, MessageCircle, Send } from "lucide-react";
 import { useOutletContext } from "react-router";
+import ShortUserDTO from "~/services/api/DTO/ShortUserDTO";
+import {
+	setComment,
+	toggleLike,
+	updatePost,
+	deletePost,
+} from "~/services/api/PostController";
+import PostDTO from "~/services/api/DTO/PostDTO";
 import CommentDTO from "~/services/api/DTO/CommentDTO";
+import LikeDTO from "~/services/api/DTO/LikeDTO";
 import TagDTO from "~/services/api/DTO/TagDTO";
-import { setComment } from "~/services/api/PostController";
 
 interface Comment {
 	user: string;
@@ -20,7 +19,7 @@ interface Comment {
 }
 
 interface CardProps {
-	post : Object;
+	post: PostDTO;
 	username: string;
 	userImage: string;
 	content: string;
@@ -32,6 +31,12 @@ interface CardProps {
 	onLike: () => void;
 	onUnlike: () => void;
 	onAddComment: (comment: string) => void;
+	onEdit: (
+		newContent: string,
+		newImage: string,
+		newHashtags: string[]
+	) => void;
+	onDelete: (postId: string) => void;
 }
 
 type OutletContextType = {
@@ -40,6 +45,7 @@ type OutletContextType = {
 
 const MAX_CONTENT_LENGTH = 150;
 const MAX_COMMENT_LENGTH = 200;
+const MAX_EDIT_LENGTH = 500
 
 const PostCard: React.FC<CardProps> = ({
 	post,
@@ -54,6 +60,8 @@ const PostCard: React.FC<CardProps> = ({
 	onLike,
 	onUnlike,
 	onAddComment,
+	onEdit,
+	onDelete,
 }) => {
 	const [isPhotoOnError, setIsPhotoOnError] = useState(false);
 	const [isImageError, setIsImageError] = useState(false);
@@ -66,6 +74,10 @@ const PostCard: React.FC<CardProps> = ({
 	const [expandedComments, setExpandedComments] = useState<
 		Record<number, boolean>
 	>({});
+	const [isEditing, setIsEditing] = useState(false);
+	const [editedContent, setEditedContent] = useState(content);
+	const [editedImage, setEditedImage] = useState(image || "");
+	const [editedHashtags, setEditedHashtags] = useState(hashtags.join(" "));
 
 	const formatComment = (text: string) => {
 		return text.replace(
@@ -82,17 +94,26 @@ const PostCard: React.FC<CardProps> = ({
 		setIsImageError(true);
 	};
 
-	const handleLikeClick = () => {
-		// PENDIENTE AQIU
-		if (hasLiked) {
-			setLocalLikes(localLikes - 1);
-			onUnlike();
-		} else {
-			setLocalLikes(localLikes + 1);
-			onLike();
+	const handleLikeClick = async () => {
+		const likeData = new LikeDTO(
+			0,
+			undefined,
+			undefined,
+			currentUser,
+			post
+		);
+		likeData.rawPostId = post.id;
+		likeData.rawUserId = currentUser.id;
+
+		try {
+			await toggleLike(likeData);
+
+			setLocalLikes((prev) => (hasLiked ? prev - 1 : prev + 1));
+			hasLiked ? onUnlike() : onLike();
+		} catch (error) {
+			console.error("Error al dar like:", error);
 		}
 	};
-
 
 	const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const newText = e.target.value;
@@ -105,29 +126,24 @@ const PostCard: React.FC<CardProps> = ({
 
 	const handleCommentSubmit = async () => {
 		if (commentText.trim() && commentText.length <= MAX_COMMENT_LENGTH) {
-			const newComment = new CommentDTO(
-				0,
-				currentUser,
-				mentionedUsers.map(
-					(username, index) =>
-						new TagDTO(
-							index + 1,
-							new ShortUserDTO(0, username, "", "")
-						)
-				),
-				commentText
-			);
-			 try {
-					await setComment(newComment);
+			const newComment = new CommentDTO();
+			newComment.rawPostId = post.id;
+			newComment.rawUserId = currentUser.id;
+			newComment.tags = mentionedUsers.map(
+				(username, index) =>
+					new TagDTO(index + 1, new ShortUserDTO(0, username, "", ""))
+			);;
+			newComment.content = commentText;
+			try {
+				await setComment(newComment);
 
-					onAddComment(commentText);
-					setCommentText("");
-					setShowCommentInput(false);
-					setMentionedUsers([]);
-				} catch (error) {
-					console.error("Error al enviar el comentario:", error);
-				}
-			
+				onAddComment(commentText);
+				setCommentText("");
+				setShowCommentInput(false);
+				setMentionedUsers([]);
+			} catch (error) {
+				console.error("Error al enviar el comentario:", error);
+			}
 		}
 	};
 
@@ -138,6 +154,33 @@ const PostCard: React.FC<CardProps> = ({
 		}));
 	};
 
+	const handleEditSubmit = async () => {
+		if (editedContent.length > MAX_EDIT_LENGTH) {
+      console.error("El contenido excede el límite de caracteres")
+      return
+    }
+		try {
+			onEdit(
+				editedContent,
+				editedImage,
+				editedHashtags.split(" ").filter((tag) => tag !== "")
+			);
+			setIsEditing(false);
+		} catch (error) {
+			console.error("Error al editar el post:", error);
+		}
+	};
+
+	const handleDeletePost = async () => {
+		try {
+			await deletePost(post.id);
+			onDelete(post.id);
+		} catch (error) {
+			console.error("Error al eliminar el post:", error);
+		}
+	};
+
+
 	const truncatedContent =
 		content.length > MAX_CONTENT_LENGTH
 			? `${content.slice(0, MAX_CONTENT_LENGTH)}...`
@@ -145,64 +188,125 @@ const PostCard: React.FC<CardProps> = ({
 
 	return (
 		<div className="bg-gray-900 text-white rounded-lg p-4 max-w-md mx-auto">
-			<div className="flex items-center mb-4">
-				{isPhotoOnError ? (
-					<User className="w-10 h-10 text-gray-400 mr-2" />
-				) : (
-					<img
-						src={userImage || "/placeholder.svg"}
-						alt={username}
-						className="w-10 h-10 rounded-full mr-2"
-						onError={handlePhotoOnError}
+			<div className="flex items-center justify-between mb-4">
+				<div className="flex items-center">
+					{isPhotoOnError ? (
+						<User className="w-10 h-10 text-gray-400 mr-2" />
+					) : (
+						<img
+							src={userImage || ""}
+							alt={username}
+							className="w-10 h-10 rounded-full mr-2"
+							onError={() => setIsPhotoOnError(true)}
+						/>
+					)}
+					<span className="font-semibold">{username}</span>
+				</div>
+				{currentUser.username === username && !isEditing && (
+					<div>
+						<button
+							onClick={() => setIsEditing(true)}
+							className="text-gray-400 hover:text-white focus:outline-none mr-2"
+						>
+							<Edit2 className="w-5 h-5" />
+						</button>
+						<button
+							onClick={handleDeletePost}
+							className="text-red-500 hover:text-red-400 focus:outline-none"
+						>
+							<X className="w-5 h-5" />
+						</button>
+					</div>
+				)}
+			</div>
+
+			{isEditing ? (
+				<div className="mb-4">
+					<textarea
+						value={editedContent}
+						onChange={(e) => setEditedContent(e.target.value)}
+						className="w-full bg-gray-800 text-white rounded-md py-2 px-3 focus:outline-none resize-none h-24 mb-2"
+						placeholder="Edita tu post..."
+						maxLength={MAX_EDIT_LENGTH}
 					/>
-				)}
-				<span className="font-semibold">{username}</span>
-			</div>
-
-			<div className="mb-4">
-				<p className="break-words">
-					{showFullContent ? content : truncatedContent}
-				</p>
-				{content.length > MAX_CONTENT_LENGTH && (
-					<button
-						onClick={() => setShowFullContent(!showFullContent)}
-						className="text-green-500 hover:underline focus:outline-none mt-2 flex items-center"
-					>
-						{showFullContent ? (
-							<>
-								Ver menos <ChevronUp className="w-4 h-4 ml-1" />
-							</>
-						) : (
-							<>
-								Ver más <ChevronDown className="w-4 h-4 ml-1" />
-							</>
-						)}
-					</button>
-				)}
-			</div>
-
-			{isImageError ? (
-				""
+					<input
+						type="text"
+						value={editedImage}
+						onChange={(e) => setEditedImage(e.target.value)}
+						className="w-full bg-gray-800 text-white rounded-md py-2 px-3 focus:outline-none mb-2"
+						placeholder="URL de la imagen"
+					/>
+					<input
+						type="text"
+						value={editedHashtags}
+						onChange={(e) => setEditedHashtags(e.target.value)}
+						className="w-full bg-gray-800 text-white rounded-md py-2 px-3 focus:outline-none mb-2"
+						placeholder="Hashtags (separados por espacios)"
+					/>
+					<div className="flex justify-end">
+						<button
+							onClick={() => setIsEditing(false)}
+							className="text-gray-400 hover:text-white mr-2 focus:outline-none"
+						>
+							<X className="w-5 h-5" />
+						</button>
+						<button
+							onClick={handleEditSubmit}
+							className="text-green-500 hover:text-green-400 focus:outline-none"
+						>
+							<Check className="w-5 h-5" />
+						</button>
+					</div>
+				</div>
 			) : (
-				<img
-					src={image || "/placeholder.svg"}
-					alt="Post image"
-					className="w-full h-48 object-cover rounded-md mb-4"
-					onError={handleImageError}
-				/>
+				<>
+					<div className="mb-4">
+						<p className="break-words">
+							{showFullContent ? content : truncatedContent}
+						</p>
+						{content.length > MAX_CONTENT_LENGTH && (
+							<button
+								onClick={() =>
+									setShowFullContent(!showFullContent)
+								}
+								className="text-green-500 hover:underline focus:outline-none mt-2 flex items-center"
+							>
+								{showFullContent ? (
+									<>
+										Ver menos{" "}
+										<ChevronUp className="w-4 h-4 ml-1" />
+									</>
+								) : (
+									<>
+										Ver más{" "}
+										<ChevronDown className="w-4 h-4 ml-1" />
+									</>
+								)}
+							</button>
+						)}
+					</div>
+
+					{!isImageError && (
+						<img
+							src={image || ""}
+							alt="Post image"
+							className="w-full h-48 object-cover rounded-md mb-4"
+							onError={() => setIsImageError(true)}
+						/>
+					)}
+
+					<div className="flex flex-wrap mb-4">
+						{hashtags.map((tag, index) => (
+							<span
+								key={index}
+								className="cursor-pointer text-green-500 mr-2"
+							>
+								#{tag}
+							</span>
+						))}
+					</div>
+				</>
 			)}
-
-			<div className="flex flex-wrap mb-4">
-				{hashtags.map((tag, index) => (
-					<span
-						key={index}
-						className="cursor-pointer text-green-500 mr-2"
-					>
-						#{tag}
-					</span>
-				))}
-			</div>
-
 			<div className="flex items-center justify-between mb-4">
 				<div className="flex items-center">
 					<button
@@ -307,3 +411,4 @@ const PostCard: React.FC<CardProps> = ({
 };
 
 export default React.memo(PostCard);
+

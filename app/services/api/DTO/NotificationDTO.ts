@@ -6,14 +6,14 @@ import TagDTO from "./TagDTO";
 import CommentDTO from "./CommentDTO";
 
 export default class NotificationDTO {
-	private id: number;
-	private userAction: ShortUserDTO;
-	private userNotified: ShortUserDTO;
-	private like: LikeDTO | undefined;
-	private follow: FollowDTO | undefined;
-	private tag: TagDTO | undefined;
-	private comment: CommentDTO | undefined;
-	private createdAt: Date;
+	public id: number;
+	public userAction: ShortUserDTO;
+	public userNotified: ShortUserDTO;
+	public like: LikeDTO | undefined;
+	public follow: FollowDTO | undefined;
+	public tag: TagDTO | undefined;
+	public comment: CommentDTO | undefined;
+	public createdAt: Date;
 
 	constructor(
 		id: number,

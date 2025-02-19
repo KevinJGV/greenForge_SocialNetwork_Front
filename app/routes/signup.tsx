@@ -1,4 +1,4 @@
-import type { Route } from "./+types/signin";
+import type { Route } from "./+types/signup";
 import InputComponent from "../components/inputTextForm";
 import Button from "../components/buttonDefault";
 import { Link, useNavigate } from "react-router";

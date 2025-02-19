@@ -1,12 +1,12 @@
 import ShortUserDTO from "./ShortUserDTO";
 
 export default class FollowDTO {
-	private id: number;
-	private rawUserFollowerId: number | undefined;
-	private rawUserFollowedId: number | undefined;
-	private userFollowed: ShortUserDTO; 
-	private userFollower: ShortUserDTO; 
-	private followdate: Date; 
+	public id: number;
+	public rawUserFollowerId: number | undefined;
+	public rawUserFollowedId: number | undefined;
+	public userFollowed: ShortUserDTO; 
+	public userFollower: ShortUserDTO; 
+	public followdate: Date; 
 
 	constructor(
 		id: number,

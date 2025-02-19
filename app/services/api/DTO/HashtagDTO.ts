@@ -1,8 +1,8 @@
 export default class HashtagDTO {
-	private id: number;
-	private name: string;
+	public id: number | undefined;
+	public name: string;
 
-	constructor(id: number, name: string) {
+	constructor(id: number | undefined, name: string) {
 		this.id = id;
 		this.name = name;
 	}
@@ -12,17 +12,17 @@ export default class HashtagDTO {
      * Getter $id
      * @return {number}
      */
-	public get $id(): number {
-		return this.id;
-	}
+		public get $id(): number {
+			return this.id || 0;
+		}
 
-    /**
-     * Getter $name
-     * @return {string}
-     */
-	public get $name(): string {
-		return this.name;
-	}
+	    /**
+	     * Getter $name
+	     * @return {string}
+	     */
+		public get $name(): string {
+			return this.name;
+		}
 
     /**
      * Setter $id

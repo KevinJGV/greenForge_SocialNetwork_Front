@@ -1,8 +1,14 @@
 import { Home, LogOut, UserRound, Bell } from "lucide-react";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
 import ThemeToggle from "./themeToggle";
+import { api } from "~/services/api/axiosConfig";
 
 const Sidebar = () => {
+	async function handleSignout() {
+		await api.post("/auth/logout");
+		localStorage.clear();
+		return <Navigate to="/signin" replace/>;
+	}
 	return (
 		<header className="flex-0 ">
 			<nav className="w-64 bg-black p-6 flex flex-col justify-between h-dvh fixed">
@@ -35,6 +41,7 @@ const Sidebar = () => {
 						<span>Notificaciones</span>
 					</Link>
 					<span
+					onClick={handleSignout}
 						className="cursor-pointer flex items-center space-x-2 text-primarystatic-200 hover:text-white"
 					>
 						<LogOut />

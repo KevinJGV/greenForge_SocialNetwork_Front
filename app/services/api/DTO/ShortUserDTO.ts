@@ -1,8 +1,8 @@
 export default class ShortUserDTO {
-	private id: number;
-	private username: string;
-	private fullname: string;
-	private profilephotouri: string;
+	public id: number;
+	public username: string;
+	public fullname: string;
+	public profilephotouri: string;
 
 	constructor(
 		id: number,
